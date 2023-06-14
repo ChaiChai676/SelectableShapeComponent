@@ -9,7 +9,7 @@
 class UBoxComponent;
 
 UENUM(BlueprintType)
-enum class EDamageShape : uint8
+enum class EShapeComponent : uint8
 {
 	Box,
 	Sphere,
@@ -26,10 +26,10 @@ public:
 	ACustomCollisionActor();
 
 	UFUNCTION(BlueprintCallable)
-	void SetCollShape(EDamageShape InCollisionShape);
+	void SetCollShape(EShapeComponent InCollisionShape);
 
-	// TODO try and hide this from designers but still make it editable.
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Collision", meta = (HideInDetailPanel = true))
+	// TODO try and hide this from designers but still make it editable. I don't think it can be done.
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Collision")
 	UShapeComponent* CollisionShape;
 
 	UPROPERTY(EditAnywhere)
@@ -40,5 +40,5 @@ public:
 private:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Collision", meta = (AllowPrivateAccess = "true"))
-	EDamageShape Shape = EDamageShape::Sphere;
+	EShapeComponent Shape = EShapeComponent::Sphere;
 };

@@ -17,7 +17,7 @@ ACustomCollisionActor::ACustomCollisionActor()
 	DealDamageComponent = CreateDefaultSubobject<UDealDamageComponent>(TEXT("Deal Damage Component"));
 }
 
-void ACustomCollisionActor::SetCollShape(EDamageShape InCollisionShape)
+void ACustomCollisionActor::SetCollShape(EShapeComponent InCollisionShape)
 {
 	if (CollisionShape != nullptr)
 	{
@@ -31,7 +31,7 @@ void ACustomCollisionActor::SetCollShape(EDamageShape InCollisionShape)
 	
 	switch (InCollisionShape)
 	{
-	case (EDamageShape::Box):
+	case (EShapeComponent::Box):
 		{
 			UBoxComponent* BoxComponent = NewObject<UBoxComponent>(this, UBoxComponent::StaticClass(), "boxcomp");
 			if (BoxComponent)
@@ -41,7 +41,7 @@ void ACustomCollisionActor::SetCollShape(EDamageShape InCollisionShape)
 			}
 			break;
 		}
-	case (EDamageShape::Sphere):
+	case (EShapeComponent::Sphere):
 		{
 			USphereComponent* SphereComponent = NewObject<USphereComponent>(this, USphereComponent::StaticClass(), "SphereComp");
 			if (SphereComponent)
@@ -51,7 +51,7 @@ void ACustomCollisionActor::SetCollShape(EDamageShape InCollisionShape)
 			}
 			break;
 		}
-	case (EDamageShape::Capsule):
+	case (EShapeComponent::Capsule):
 		{
 			UCapsuleComponent* CapsuleComponent = NewObject<UCapsuleComponent>(this, UCapsuleComponent::StaticClass(), "CapsuleComp");
 			if (CapsuleComponent)
@@ -84,10 +84,29 @@ void ACustomCollisionActor::PostEditChangeProperty(FPropertyChangedEvent& Proper
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 
 	FName const PropertyName = (PropertyChangedEvent.Property != NULL) ? PropertyChangedEvent.Property->GetFName() : NAME_None;
-	FName const MemberName = GET_MEMBER_NAME_CHECKED(ACustomCollisionActor, Shape);
+	FName const MemberName = GET_MEMBER_NAME_CHECKED(ACustomCollisionActor, CollisionShape);
+	
 	if (PropertyName == MemberName)
 	{
-		SetCollShape(Shape);
+		FString const ValName = CollisionShape->GetClass()->GetName();
+
+		if (CollisionShape->GetClass() == UBoxComponent::StaticClass())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("My SClass: %s"), *ValName);
+			SetCollShape(Shape = EShapeComponent::Box);
+		}
+		
+		if (CollisionShape->GetClass() == UCapsuleComponent::StaticClass())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("My SClass: %s"), *ValName);
+			SetCollShape(Shape = EShapeComponent::Capsule);
+		}
+		
+		if (CollisionShape->GetClass() == USphereComponent::StaticClass())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("My SClass: %s"), *ValName);
+			SetCollShape(Shape = EShapeComponent::Sphere);
+		}
 	}
 	else
 	{
